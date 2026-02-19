@@ -1,9 +1,7 @@
-// main.js
-// BoS module only runs inside /BoS/ pages (data-bos attribute)
-// - Start: floating shuffled keyword buttons, visited marks, reset on start only
-// - Fragment: auto-save pasted story text by code (01-12)
-// - Puzzle: 60% unlock, 3-fail hints, reconstruct full story from saved fragments
-// Does not affect CR/FG pages.
+// main.js (OVERWRITE)
+// Global: visited-choice marks for normal pages (CR etc.) + reset clears global marks
+// FG: vanish animation + delay jump + visited marks (FG-only key) + reset if button exists
+// BoS: your current BoS module (data-bos only), does not affect CR/FG
 
 (function () {
   // ---------- helpers ----------
@@ -19,20 +17,81 @@
   function remove(key) {
     try { localStorage.removeItem(key); } catch (e) {}
   }
+  function pageName() {
+    const p = location.pathname.split("/").pop();
+    return p ? p : "index.html";
+  }
+  function choiceId(a) {
+    return (a.getAttribute("href") || "") + "||" + (a.textContent || "").trim();
+  }
 
+  // ---------- detect modes ----------
   function isBoS() {
     return document.body && document.body.hasAttribute("data-bos");
   }
   function bosMode() {
     return document.body.getAttribute("data-bos"); // start | frag | puzzle
   }
+  function isFG() {
+    return document.body && /\bfg\d+\b/.test(document.body.className);
+  }
 
-  // ---------- keys (BoS-only; will not touch your other stories) ----------
-  const BOS_VISITED = "bos_visited_keys_v1";     // {keys:{01:true,...}}
-  const BOS_FRAGS   = "bos_fragments_v1";        // { "01":"text...", ... }
-  const BOS_TRIES   = "bos_puzzle_attempts_v1";  // { n: 0.. }
+  // ---------- keys ----------
+  const KEY_GLOBAL = "visited_choices_v1";     // CR + other normal pages
+  const KEY_FG     = "fg_visited_choices_v1";  // FG-only visited
+  const BOS_VISITED = "bos_visited_keys_v1";
+  const BOS_FRAGS   = "bos_fragments_v1";
+  const BOS_TRIES   = "bos_puzzle_attempts_v1";
 
-  // ---------- BoS constants ----------
+  // ---------- global visited (CR etc.) ----------
+  function recordVisited(key, a) {
+    const store = load(key, {});
+    const page = pageName();
+    if (!store[page]) store[page] = {};
+    store[page][choiceId(a)] = true;
+    save(key, store);
+  }
+
+  function applyVisited(key) {
+    const store = load(key, {});
+    const page = pageName();
+    const map = store[page] || {};
+    document.querySelectorAll("a.choice").forEach(function (a) {
+      if (map[choiceId(a)]) a.classList.add("visited-choice");
+    });
+  }
+
+  function wireReset(key) {
+    const btn = document.querySelector(".reset-marks");
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      remove(key);
+      location.reload();
+    });
+  }
+
+  // ---------- FG vanish + delay ----------
+  function fgVanishThenGo(clicked, delayMs) {
+    const href = clicked.getAttribute("href");
+    if (!href) return;
+
+    const all = Array.from(document.querySelectorAll("a.choice"));
+    all.forEach(function (a) { a.style.pointerEvents = "none"; });
+
+    all.forEach(function (a) {
+      if (a !== clicked) a.classList.add("vanish");
+    });
+
+    clicked.style.opacity = "1";
+    clicked.style.transform = "scale(1.03)";
+
+    setTimeout(function () {
+      location.href = href;
+    }, delayMs);
+  }
+
+  // ---------- BoS (keep your logic) ----------
   // Correct story order (step1..12) expressed as CODES you must input:
   const BOS_CORRECT_CODES = ["05","10","02","07","11","04","12","08","06","01","09","03"];
 
@@ -43,15 +102,12 @@
     return v;
   }
 
-  // ---------- visited ----------
   function bosLoadVisited() {
     const obj = load(BOS_VISITED, { keys: {} });
     if (!obj.keys) obj.keys = {};
     return obj;
   }
-  function bosSaveVisited(obj) {
-    save(BOS_VISITED, obj);
-  }
+  function bosSaveVisited(obj) { save(BOS_VISITED, obj); }
   function bosMarkVisited(code) {
     const obj = bosLoadVisited();
     obj.keys[code] = true;
@@ -66,7 +122,6 @@
     });
   }
 
-  // ---------- shuffle + float layout ----------
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -79,11 +134,9 @@
     const cloud = document.querySelector("[data-bos-cloud]");
     if (!cloud) return;
 
-    // Shuffle DOM order
     const items = Array.from(cloud.querySelectorAll("[data-bos-key]"));
     shuffle(items).forEach(function (el) { cloud.appendChild(el); });
 
-    // Random absolute positions (within cloud box)
     const w = cloud.clientWidth || 920;
     const h = cloud.clientHeight || 520;
 
@@ -97,45 +150,19 @@
     });
   }
 
-  // ---------- vanish then navigate (for BoS start keys only) ----------
-  function vanishAndGo(clicked, delayMs) {
-    const href = clicked.getAttribute("href");
-    if (!href) return;
-
-    const all = Array.from(document.querySelectorAll("[data-bos-key]"));
-    all.forEach(function (a) { a.style.pointerEvents = "none"; });
-
-    all.forEach(function (a) {
-      if (a !== clicked) a.classList.add("vanish");
-    });
-
-    clicked.classList.add("chosen");
-    setTimeout(function () { location.href = href; }, delayMs || 1500);
-  }
-
-  // ---------- fragments saving ----------
-  function bosLoadFrags() {
-    return load(BOS_FRAGS, {});
-  }
-  function bosSaveFrags(obj) {
-    save(BOS_FRAGS, obj);
-  }
+  function bosLoadFrags() { return load(BOS_FRAGS, {}); }
+  function bosSaveFrags(obj) { save(BOS_FRAGS, obj); }
 
   function bosCaptureFragmentIfAny() {
-    // On fragment pages, save pasted story text (innerText) into localStorage by code.
     if (bosMode() !== "frag") return;
-
     const code = document.body.getAttribute("data-code"); // "01".."12"
     if (!code) return;
 
     const p = document.querySelector(".story p");
     if (!p) return;
 
-    // Save only if user has pasted real text (not the placeholder)
     const text = (p.innerText || "").trim();
     if (!text) return;
-
-    // Heuristic: if still contains placeholder marker, ignore
     if (text.indexOf("PASTE HERE") !== -1 || text.indexOf("【PASTE") !== -1) return;
 
     const frags = bosLoadFrags();
@@ -143,14 +170,11 @@
     bosSaveFrags(frags);
   }
 
-  // ---------- puzzle ----------
   function bosGetTries() {
     const obj = load(BOS_TRIES, { n: 0 });
     return obj.n || 0;
   }
-  function bosSetTries(n) {
-    save(BOS_TRIES, { n: n });
-  }
+  function bosSetTries(n) { save(BOS_TRIES, { n: n }); }
 
   function bosPuzzleInit() {
     if (bosMode() !== "puzzle") return;
@@ -161,27 +185,18 @@
     const rebuildWrap = document.querySelector("[data-bos-rebuild]");
     const fulltext = document.querySelector("[data-bos-fulltext]");
 
-    function setHTML(el, html) {
-      if (!el) return;
-      el.innerHTML = html;
-    }
-
+    function setHTML(el, html) { if (el) el.innerHTML = html; }
     function escapeHTML(s) {
       return (s || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
-
     function reconstructFull() {
       const frags = bosLoadFrags();
-      // Build in correct story order (step1..12 => BOS_CORRECT_CODES)
       const parts = BOS_CORRECT_CODES.map(function (code) {
-        return frags[code] ? frags[code] : ("[MISSING " + code + " — open that fragment page first]");
+        return frags[code] ? frags[code] : ("[MISSING " + code + "]");
       });
       return parts.join("\n\n");
     }
-
     function showFull() {
       if (!rebuildWrap || !fulltext) return;
       const txt = reconstructFull();
@@ -189,6 +204,7 @@
       rebuildWrap.style.display = "block";
     }
 
+    if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -197,7 +213,6 @@
 
       let correctPos = 0;
       const marks = [];
-
       for (let i = 0; i < answer.length; i++) {
         const ok = guess[i] === answer[i];
         if (ok) correctPos++;
@@ -212,7 +227,6 @@
         return;
       }
 
-      // failed
       let n = bosGetTries() + 1;
       bosSetTries(n);
 
@@ -221,7 +235,6 @@
         return;
       }
 
-      // hints after 3 fails
       const hintLine = marks.map(function (ok, i) {
         return `<span class="bos-hint ${ok ? "yes" : "no"}">${String(i+1).padStart(2,"0")}${ok ? "✓" : "·"}</span>`;
       }).join("");
@@ -234,12 +247,10 @@
     });
   }
 
-  // ---------- start page reset ----------
   function bosWireResetOnStart() {
     if (bosMode() !== "start") return;
     const btn = document.querySelector(".reset-marks");
     if (!btn) return;
-
     btn.addEventListener("click", function (e) {
       e.preventDefault();
       remove(BOS_VISITED);
@@ -249,7 +260,6 @@
     });
   }
 
-  // ---------- click handler (BoS start keys) ----------
   function bosWireKeyClicks() {
     if (bosMode() !== "start") return;
 
@@ -260,77 +270,59 @@
       const code = a.getAttribute("data-code");
       if (code) bosMarkVisited(code);
 
+      // BoS start: keep your vanish effect if you want (simple)
       e.preventDefault();
-      vanishAndGo(a, 800); // longer delay so user can SEE vanish
+      location.href = a.getAttribute("href");
     }, true);
   }
 
-  // ---------- init ----------
-  window.addEventListener("DOMContentLoaded", function () {
-    if (!isBoS()) return;
+  // ---------- CLICK handling (split by modes) ----------
+  document.addEventListener("click", function (e) {
+    const a = e.target.closest("a.choice");
+    if (!a) return;
 
-    if (bosMode() === "start") {
-      bosInitCloud();
-      bosApplyVisitedOnStart();
-      bosWireResetOnStart();
-      bosWireKeyClicks();
-      return;
-    }
+    // BoS pages have their own interaction; don't mix
+    if (isBoS()) return;
 
-    if (bosMode() === "frag") {
-      bosCaptureFragmentIfAny();
-      return;
-    }
-
-    if (bosMode() === "puzzle") {
-      bosPuzzleInit();
-      return;
-    }
-  });
-})();
-
-// ===============================
-// FG ONLY: vanish + delay jump
-// ===============================
-(function () {
-  function isFG() {
-    return document.body && /\bfg\d+\b/.test(document.body.className);
-  }
-
-  if (!isFG()) return;
-
-  document.addEventListener(
-    "click",
-    function (e) {
-      const a = e.target.closest("a.choice");
-      if (!a) return;
-
-      const href = a.getAttribute("href");
-      if (!href) return;
-
+    if (isFG()) {
+      // FG: record in FG store + vanish then jump
+      recordVisited(KEY_FG, a);
       e.preventDefault();
+      fgVanishThenGo(a, 1400); // ← 想更久就改这里，例如 1800 / 2200
+      return;
+    }
 
-      const all = Array.from(document.querySelectorAll("a.choice"));
+    // Normal pages (CR etc.): record global store, normal navigation
+    recordVisited(KEY_GLOBAL, a);
+  }, true);
 
-      // lock immediately
-      all.forEach(function (el) {
-        el.style.pointerEvents = "none";
-      });
+  // ---------- DOMContentLoaded ----------
+  window.addEventListener("DOMContentLoaded", function () {
+    // BoS pages
+    if (isBoS()) {
+      if (bosMode() === "start") {
+        bosInitCloud();
+        bosApplyVisitedOnStart();
+        bosWireResetOnStart();
+        bosWireKeyClicks();
+      } else if (bosMode() === "frag") {
+        bosCaptureFragmentIfAny();
+      } else if (bosMode() === "puzzle") {
+        bosPuzzleInit();
+      }
+      return;
+    }
 
-      // vanish others
-      all.forEach(function (el) {
-        if (el !== a) el.classList.add("vanish");
-      });
+    // FG pages
+    if (isFG()) {
+      applyVisited(KEY_FG);
+      // 如果你 FG 起始页有 reset-marks，就会生效；没放就不会影响
+      wireReset(KEY_FG);
+      return;
+    }
 
-      // emphasize chosen
-      a.style.opacity = "1";
-      a.style.transform = "scale(1.03)";
-
-      // ⏳ 延迟跳转（你要的“明显停顿”）
-      setTimeout(function () {
-        location.href = href;
-      }, 1000); // ← 这里随便调：1200 / 1500 / 1800
-    },
-    true
-  );
+    // Normal pages (CR etc.)
+    applyVisited(KEY_GLOBAL);
+    wireReset(KEY_GLOBAL);
+  });
 })();
