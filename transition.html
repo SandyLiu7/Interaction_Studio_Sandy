@@ -26,7 +26,7 @@
   </main>
 
   <script>
-    // read target from query string
+   
     const params = new URLSearchParams(window.location.search);
     const target = params.get("to");
 
@@ -36,7 +36,7 @@
     if (target) {
       btn.href = target;
 
-      // optional: slightly customize text per target
+     
       if (target.includes("CR")) {
         text.innerHTML =
           "You are leaving this story.<br><br>" +

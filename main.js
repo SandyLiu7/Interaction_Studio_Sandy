@@ -1,10 +1,5 @@
-// main.js (OVERWRITE)
-// Global: visited-choice marks for normal pages (CR etc.) + reset clears global marks
-// FG: vanish animation + delay jump + visited marks (FG-only key) + reset if button exists
-// BoS: your current BoS module (data-bos only), does not affect CR/FG
-
 (function () {
-  // ---------- helpers ----------
+  
   function safeParse(str, fallback) {
     try { return JSON.parse(str); } catch (e) { return fallback; }
   }
@@ -25,25 +20,25 @@
     return (a.getAttribute("href") || "") + "||" + (a.textContent || "").trim();
   }
 
-  // ---------- detect modes ----------
+  
   function isBoS() {
     return document.body && document.body.hasAttribute("data-bos");
   }
   function bosMode() {
-    return document.body.getAttribute("data-bos"); // start | frag | puzzle
+    return document.body.getAttribute("data-bos"); 
   }
   function isFG() {
     return document.body && /\bfg\d+\b/.test(document.body.className);
   }
 
-  // ---------- keys ----------
-  const KEY_GLOBAL = "visited_choices_v1";     // CR + other normal pages
-  const KEY_FG     = "fg_visited_choices_v1";  // FG-only visited
+  
+  const KEY_GLOBAL = "visited_choices_v1";     
+  const KEY_FG     = "fg_visited_choices_v1";  
   const BOS_VISITED = "bos_visited_keys_v1";
   const BOS_FRAGS   = "bos_fragments_v1";
   const BOS_TRIES   = "bos_puzzle_attempts_v1";
 
-  // ---------- global visited (CR etc.) ----------
+ 
   function recordVisited(key, a) {
     const store = load(key, {});
     const page = pageName();
@@ -71,7 +66,7 @@
     });
   }
 
-  // ---------- FG vanish + delay ----------
+  
   function fgVanishThenGo(clicked, delayMs) {
     const href = clicked.getAttribute("href");
     if (!href) return;
@@ -91,8 +86,7 @@
     }, delayMs);
   }
 
-  // ---------- BoS (keep your logic) ----------
-  // Correct story order (step1..12) expressed as CODES you must input:
+  
   const BOS_CORRECT_CODES = ["05","10","02","07","11","04","12","08","06","01","09","03"];
 
   function normalizeCode(v) {
@@ -155,7 +149,7 @@
 
   function bosCaptureFragmentIfAny() {
     if (bosMode() !== "frag") return;
-    const code = document.body.getAttribute("data-code"); // "01".."12"
+    const code = document.body.getAttribute("data-code"); 
     if (!code) return;
 
     const p = document.querySelector(".story p");
@@ -270,35 +264,35 @@
       const code = a.getAttribute("data-code");
       if (code) bosMarkVisited(code);
 
-      // BoS start: keep your vanish effect if you want (simple)
+      
       e.preventDefault();
       location.href = a.getAttribute("href");
     }, true);
   }
 
-  // ---------- CLICK handling (split by modes) ----------
+  
   document.addEventListener("click", function (e) {
     const a = e.target.closest("a.choice");
     if (!a) return;
 
-    // BoS pages have their own interaction; don't mix
+    
     if (isBoS()) return;
 
     if (isFG()) {
-      // FG: record in FG store + vanish then jump
+     
       recordVisited(KEY_FG, a);
       e.preventDefault();
-      fgVanishThenGo(a, 1400); // ← 想更久就改这里，例如 1800 / 2200
+      fgVanishThenGo(a, 1400); 
       return;
     }
 
-    // Normal pages (CR etc.): record global store, normal navigation
+   
     recordVisited(KEY_GLOBAL, a);
   }, true);
 
-  // ---------- DOMContentLoaded ----------
+  
   window.addEventListener("DOMContentLoaded", function () {
-    // BoS pages
+   
     if (isBoS()) {
       if (bosMode() === "start") {
         bosInitCloud();
@@ -313,15 +307,15 @@
       return;
     }
 
-    // FG pages
+   
     if (isFG()) {
       applyVisited(KEY_FG);
-      // 如果你 FG 起始页有 reset-marks，就会生效；没放就不会影响
+      
       wireReset(KEY_FG);
       return;
     }
 
-    // Normal pages (CR etc.)
+  
     applyVisited(KEY_GLOBAL);
     wireReset(KEY_GLOBAL);
   });

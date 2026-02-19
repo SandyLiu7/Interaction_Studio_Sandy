@@ -27,14 +27,14 @@ body{
   font-size:30px;
 }
 
-/* ====== layout ====== */
+
 main{
   max-width: 1040px;
   margin: 0 auto;
   padding: 64px 32px 52px;
 }
 
-/* ====== title ====== */
+
 h3{
   font-weight:400;
   margin:0 0 34px 0;
@@ -44,7 +44,7 @@ h3{
   line-height:1.15;
 }
 
-/* ====== story panel ====== */
+
 .story{
   background:linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   border:1px solid rgba(255,255,255,0.08);
@@ -62,7 +62,7 @@ p{
   line-height:1.8;
 }
 
-/* ====== choices ====== */
+
 .choices{
   display:flex;
   flex-direction:column;
@@ -84,7 +84,7 @@ p{
   background:transparent;
 
   transform:scale(1);
-  opacity:0.12;   /* 常驻低透明 */
+  opacity:0.12;   
 
   transition:
     transform 160ms ease,
@@ -107,7 +107,7 @@ p{
   opacity:0.86;
 }
 
-/* visited mark */
+
 .choice.visited-choice{
   opacity:0.70;
   border-color:rgba(255,255,255,0.14);
@@ -119,7 +119,6 @@ p{
   color:rgba(255,255,255,0.55);
 }
 
-/* ====== reset + home ====== */
 .reset{
   margin-top:84px;
   display:flex;
@@ -158,7 +157,7 @@ p{
   font-size:22px;
 }
 
-/* ====== CR background progression (12) ====== */
+
 body.cr1  { --bg:#2a240e; }
 body.cr2  { --bg:#2d1f0b; }
 body.cr3  { --bg:#311a09; }
@@ -172,27 +171,22 @@ body.cr10 { --bg:#580101; }
 body.cr11 { --bg:#600000; }
 body.cr12 { --bg:#240000; }
 
-/* ===================================== */
-/* FG BACKGROUND PROGRESSION (12 steps) */
-/* 紫 → 蓝，随故事深度变化 */
-/* ===================================== */
-body.fg1  { --bg:#1a0b26; } /* deep violet */
+
+body.fg1  { --bg:#1a0b26; } 
 body.fg2  { --bg:#160b2d; }
 body.fg3  { --bg:#120c34; }
-body.fg4  { --bg:#0f0d3b; } /* indigo */
+body.fg4  { --bg:#0f0d3b; } 
 body.fg5  { --bg:#0c0e42; }
 body.fg6  { --bg:#090f49; }
 body.fg7  { --bg:#07104f; }
 body.fg8  { --bg:#051155; }
-body.fg9  { --bg:#04125b; } /* blue */
+body.fg9  { --bg:#04125b; } 
 body.fg10 { --bg:#031361; }
 body.fg11 { --bg:#021467; }
-body.fg12 { --bg:#01156d; } /* deepest blue */
+body.fg12 { --bg:#01156d; } 
 
 
-/* ===================================== */
-/* INDEX PAGE — PNG ICON VERSION */
-/* ===================================== */
+
 
 body > main:has(> .choices):not(:has(h3)):not(:has(.story)){
   max-width:none;
@@ -233,7 +227,7 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   opacity:1;
 }
 
-/* PNG icon */
+
 body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice::before{
   content:"";
   position:absolute;
@@ -248,13 +242,12 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   background-position:center;
   background-size:contain;
 
-  /* 如果你的 PNG 是黑色线条，打开下面一行 */
-  /* filter: invert(1); */
+
 
   transition:opacity 200ms ease;
 }
 
-/* three icons */
+
 body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:nth-child(1)::before{
   background-image:url("icons/icon-choose.png");
 }
@@ -267,7 +260,7 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   background-image:url("icons/icon-open.png");
 }
 
-/* hover: icon disappears, text appears */
+
 body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:hover{
   color:rgba(255,255,255,0.92);
 }
@@ -276,17 +269,15 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   opacity:0;
 }
 
-/* ====== wide screens ====== */
+
 @media (min-width:1400px){
   main{ max-width:1200px; }
   .story{ max-width:1000px; }
 }
 
-/* ===================================== */
-/* FG: choice vanish animation */
-/* ===================================== */
+
 .choice{
-  /* 你已经有 transition，这里不改动你的动画风格 */
+
 }
 
 .choice.vanish{
@@ -301,7 +292,7 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   pointer-events: none !important;
 }
 
-/* FG: a small progress chip */
+
 .fg-progress{
   margin-top: 26px;
   display:flex;
@@ -317,11 +308,7 @@ body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice
   background: rgba(255,255,255,0.02);
 }
 
-/* ===================================== */
-/* BoS ONLY */
-/* ===================================== */
 
-/* 背景：绿 → 黄（按故事正确顺序 step1..12） */
 body.bos-step1  { --bg:#0b2312; }
 body.bos-step2  { --bg:#0f2712; }
 body.bos-step3  { --bg:#132b12; }
@@ -335,7 +322,7 @@ body.bos-step10 { --bg:#364a0a; }
 body.bos-step11 { --bg:#3d4f07; }
 body.bos-step12 { --bg:#455505; }
 
-/* start 页的云容器 */
+
 body[data-bos="start"] .bos-cloud{
   position: relative;
   width: 100%;
@@ -344,26 +331,26 @@ body[data-bos="start"] .bos-cloud{
   margin: 10px auto 0;
 }
 
-/* start 页入口按钮：绝对定位 + 轻浮动 */
+
 body[data-bos="start"] .bos-key{
   position: absolute;
   animation: bosFloat 3.2s ease-in-out infinite;
   animation-delay: var(--floatDelay, 0s);
   will-change: transform;
-  opacity: 0.16; /* 常驻低透明，符合你整体风格 */
+  opacity: 0.16; 
 }
 
 body[data-bos="start"] .bos-key:hover{
   opacity: 1;
 }
 
-/* 浮动动画 */
+
 @keyframes bosFloat{
   0%,100%{ transform: translateY(0); }
   50%{ transform: translateY(calc(-1 * var(--floatAmp, 14px))); }
 }
 
-/* 点击后其它入口消失 */
+
 body[data-bos="start"] .bos-key.vanish{
   opacity: 0 !important;
   transform: scale(0.96) !important;
@@ -376,7 +363,7 @@ body[data-bos="start"] .bos-key.chosen{
   transform: scale(1.02) !important;
 }
 
-/* 编码 chip */
+
 body[data-bos="frag"] .bos-code,
 body[data-bos="puzzle"] .bos-code{
   text-align: center;
@@ -386,7 +373,7 @@ body[data-bos="puzzle"] .bos-code{
   margin: 0 0 14px 0;
 }
 
-/* puzzle 输入区 */
+
 body[data-bos="puzzle"] .bos-form{ margin-top: 26px; }
 
 body[data-bos="puzzle"] .bos-grid{
@@ -458,35 +445,33 @@ body[data-bos="puzzle"] .bos-hint.yes{
   letter-spacing: 0.02em;
 }
 
-/* ===================== */
-/* Story corner controls (inside panel) */
-/* ===================== */
+
 
 .story{
-  position: relative; /* 锚点 */
-  padding-bottom: 58px; /* ⬅️ 给按钮留空间 */
+  position: relative; 
+  padding-bottom: 58px; 
 }
 
-/* 容器：贴在文本框内部底部 */
+
 .story-controls{
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 14px; /* ⬅️ 在文本框内部 */
+  bottom: 14px; 
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
   pointer-events: none;
 }
 
-/* 按钮本体 */
+
 .story-btn{
   pointer-events: auto;
-  font-size: 15px;              /* ⬅️ 稍微变大 */
+  font-size: 15px;             
   color: rgba(255,255,255,0.72);
   text-decoration: none;
 
-  padding: 8px 14px;            /* ⬅️ 体积更实 */
+  padding: 8px 14px;            
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.22);
 
@@ -501,7 +486,6 @@ body[data-bos="puzzle"] .bos-hint.yes{
     background 160ms ease;
 }
 
-/* 左右微调，让它“贴角” */
 .story-btn.left{
   transform: translateX(0);
 }
@@ -510,16 +494,14 @@ body[data-bos="puzzle"] .bos-hint.yes{
   transform: translateX(0);
 }
 
-/* hover：更清楚，但不跳 */
+
 .story-btn:hover{
   opacity: 0.95;
   border-color: rgba(255,255,255,0.4);
   background: rgba(0,0,0,0.38);
 }
 
-/* ============================= */
-/* BoS start — simple action row */
-/* ============================= */
+
 
 body[data-bos="start"] .bos-action-row{
   display: flex;
@@ -530,14 +512,14 @@ body[data-bos="start"] .bos-action-row{
   margin-top: 42px;
 }
 
-/* 中间主按钮 */
+
 body[data-bos="start"] .bos-main{
   opacity: 1;
   font-size: 24px;
   padding: 14px 22px;
 }
 
-/* 左右小按钮 */
+
 body[data-bos="start"] .bos-small{
   font-size: 14px;
   padding: 6px 10px;
@@ -559,13 +541,13 @@ body[data-bos="start"] .bos-small:hover{
 }
 
 
-/* 整个舞台 */
+
 .stage{
   position: relative;
   min-height: 100vh;
 }
 
-/* 幽灵文字本体 */
+
 .ghost-text{
   position: absolute;
 
@@ -580,21 +562,20 @@ body[data-bos="start"] .bos-small:hover{
   animation: whisper 2.4s infinite ease-in-out;
 }
 
-/* 左边那一个 —— 对应左白圈 */
+
 .ghost-text.left{
-  left: 22%;      /* ← 就是这个值，控制横向位置 */
-  top: 50%;       /* ← 垂直居中 */
+  left: 22%;      
+  top: 50%;       
   transform: translateY(-50%);
 }
 
-/* 右边那一个 —— 对应右白圈 */
+
 .ghost-text.right{
   right: 22%;
   top: 50%;
   transform: translateY(-50%);
 }
 
-/* 克制的忽闪（不是闪灯） */
 @keyframes whisper{
   0%   { opacity: 0.15; }
   40%  { opacity: 0.45; }
