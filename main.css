@@ -557,3 +557,47 @@ body[data-bos="start"] .bos-small:hover{
   opacity: 1;
   transform: scale(1.05);
 }
+
+
+/* 整个舞台 */
+.stage{
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 幽灵文字本体 */
+.ghost-text{
+  position: absolute;
+
+  font-size: 1.5rem;
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+
+  color: rgba(255,255,255,0.35);
+  pointer-events: none;
+  user-select: none;
+
+  animation: whisper 2.4s infinite ease-in-out;
+}
+
+/* 左边那一个 —— 对应左白圈 */
+.ghost-text.left{
+  left: 22%;      /* ← 就是这个值，控制横向位置 */
+  top: 50%;       /* ← 垂直居中 */
+  transform: translateY(-50%);
+}
+
+/* 右边那一个 —— 对应右白圈 */
+.ghost-text.right{
+  right: 22%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* 克制的忽闪（不是闪灯） */
+@keyframes whisper{
+  0%   { opacity: 0.15; }
+  40%  { opacity: 0.45; }
+  60%  { opacity: 0.22; }
+  100% { opacity: 0.15; }
+}
