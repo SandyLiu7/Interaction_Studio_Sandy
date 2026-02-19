@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BoS Puzzle</title>
+  <link rel="stylesheet" href="../main.css" />
+</head>
+
+<body class="bos-step12" data-bos="puzzle">
+  <main>
+    <h3><strong>The Book of Sand</strong></h3>
+
+    <div class="story">
+      <p>
+        Enter the codes (01–12) in the correct story order.
+        <br><br>
+        Accuracy ≥ 60% will unlock the reconstructed story.
+        <br><br>
+        (Open each fragment page at least once so the system can collect the text.)
+      </p>
+    </div>
+
+    <form class="bos-form" data-bos-form>
+      <div class="bos-grid">
+        <input class="bos-input" maxlength="2" placeholder="01" />
+        <input class="bos-input" maxlength="2" placeholder="02" />
+        <input class="bos-input" maxlength="2" placeholder="03" />
+        <input class="bos-input" maxlength="2" placeholder="04" />
+        <input class="bos-input" maxlength="2" placeholder="05" />
+        <input class="bos-input" maxlength="2" placeholder="06" />
+        <input class="bos-input" maxlength="2" placeholder="07" />
+        <input class="bos-input" maxlength="2" placeholder="08" />
+        <input class="bos-input" maxlength="2" placeholder="09" />
+        <input class="bos-input" maxlength="2" placeholder="10" />
+        <input class="bos-input" maxlength="2" placeholder="11" />
+        <input class="bos-input" maxlength="2" placeholder="12" />
+      </div>
+
+      <div class="choices">
+        <button class="choice" type="submit">Submit</button>
+      </div>
+    </form>
+
+    <div class="bos-feedback" data-bos-feedback></div>
+
+    <div class="bos-rebuild" data-bos-rebuild style="display:none;">
+      <div class="bos-code">REBUILT</div>
+      <div class="story">
+        <p data-bos-fulltext></p>
+      </div>
+    </div>
+
+    <div class="choices">
+      <a class="choice" href="bos_start.html">Back to start</a>
+    </div>
+
+ 
+
+  <script src="../main.js"></script>
+</body>
+</html>

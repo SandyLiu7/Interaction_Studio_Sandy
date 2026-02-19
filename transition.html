@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transition</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+  <main>
+    <h3><strong>Crossing Stories</strong></h3>
+
+    <div class="story">
+      <p id="transition-text">
+        You are about to leave this story.<br><br>
+        Another narrative is waiting for you.<br>
+        Its structure, logic, and consequences will be different.<br><br>
+        Once you enter, you will have to follow its rules.
+      </p>
+    </div>
+
+    <div class="choices">
+      <a id="continue-btn" class="choice" href="#">Continue</a>
+    </div>
+  </main>
+
+  <script>
+    // read target from query string
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get("to");
+
+    const btn = document.getElementById("continue-btn");
+    const text = document.getElementById("transition-text");
+
+    if (target) {
+      btn.href = target;
+
+      // optional: slightly customize text per target
+      if (target.includes("CR")) {
+        text.innerHTML =
+          "You are leaving this story.<br><br>" +
+        
+          "Pay attention to patterns.";
+      }
+
+      if (target.includes("FG")) {
+        text.innerHTML =
+          "You are leaving this story.<br><br>" + 
+          "You will not be able to turn back.";
+      }
+
+      if (target.includes("BoS")) {
+        text.innerHTML =
+          "You are leaving this story.<br><br>" +
+          "The next one is fragmented.<br>" +
+          "You will have to assemble meaning yourself.";
+      }
+    }
+  </script>
+</body>
+</html>

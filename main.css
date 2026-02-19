@@ -1,0 +1,559 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ+Basic:wght@100..400&display=swap');
+
+:root{
+  --bg:#000;
+  --fg:rgba(255,255,255,0.92);
+  --muted:rgba(255,255,255,0.62);
+  --line:rgba(255,255,255,0.18);
+  --panel:rgba(255,255,255,0.04);
+}
+
+*{box-sizing:border-box;}
+
+body{
+  background:
+    radial-gradient(1100px 700px at 50% 10%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(900px 650px at 20% 70%, rgba(255,255,255,0.04), transparent 62%),
+    var(--bg);
+  color:var(--fg);
+
+  font-family:"Playwrite NZ Basic", cursive;
+  font-optical-sizing:auto;
+  font-weight:300;
+  font-style:normal;
+
+  margin:0;
+  padding:0;
+  font-size:30px;
+}
+
+/* ====== layout ====== */
+main{
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 64px 32px 52px;
+}
+
+/* ====== title ====== */
+h3{
+  font-weight:400;
+  margin:0 0 34px 0;
+  text-align:center;
+  letter-spacing:0.02em;
+  font-size:46px;
+  line-height:1.15;
+}
+
+/* ====== story panel ====== */
+.story{
+  background:linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:28px 22px;
+  box-shadow:0 12px 28px rgba(0, 0, 0, 0.35);
+
+  max-width: 920px;
+  margin: 6px auto 0;
+}
+
+p{
+  margin:0;
+  text-align:center;
+  line-height:1.8;
+}
+
+/* ====== choices ====== */
+.choices{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  align-items:center;
+  margin-top:38px;
+}
+
+.choice{
+  text-decoration:none;
+  color:var(--fg);
+  text-align:center;
+
+  display:inline-block;
+  padding:14px 20px;
+  border-radius:14px;
+
+  border:1px solid transparent;
+  background:transparent;
+
+  transform:scale(1);
+  opacity:0.12;   /* 常驻低透明 */
+
+  transition:
+    transform 160ms ease,
+    opacity 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    filter 160ms ease;
+}
+
+.choice:hover{
+  transform:scale(1.055);
+  opacity:1;
+  border-color:var(--line);
+  background:rgba(255,255,255,0.03);
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.18));
+}
+
+.choice:active{
+  transform:scale(0.985);
+  opacity:0.86;
+}
+
+/* visited mark */
+.choice.visited-choice{
+  opacity:0.70;
+  border-color:rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.018);
+}
+
+.choice.visited-choice::before{
+  content:"✓ ";
+  color:rgba(255,255,255,0.55);
+}
+
+/* ====== reset + home ====== */
+.reset{
+  margin-top:84px;
+  display:flex;
+  justify-content:center;
+}
+
+.reset a{
+  font-size:16px;
+  color:rgba(255,255,255,0.65);
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.02);
+}
+
+.home-wrap{
+  margin-top:36px;
+  display:flex;
+  justify-content:center;
+}
+
+.home{
+  width:56px;
+  height:56px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.03);
+  display:grid;
+  place-items:center;
+  text-decoration:none;
+  color:rgba(255,255,255,0.82);
+}
+
+.home span{
+  font-size:22px;
+}
+
+/* ====== CR background progression (12) ====== */
+body.cr1  { --bg:#2a240e; }
+body.cr2  { --bg:#2d1f0b; }
+body.cr3  { --bg:#311a09; }
+body.cr4  { --bg:#351407; }
+body.cr5  { --bg:#3a0f06; }
+body.cr6  { --bg:#3f0b05; }
+body.cr7  { --bg:#450804; }
+body.cr8  { --bg:#4b0503; }
+body.cr9  { --bg:#510302; }
+body.cr10 { --bg:#580101; }
+body.cr11 { --bg:#600000; }
+body.cr12 { --bg:#240000; }
+
+/* ===================================== */
+/* FG BACKGROUND PROGRESSION (12 steps) */
+/* 紫 → 蓝，随故事深度变化 */
+/* ===================================== */
+body.fg1  { --bg:#1a0b26; } /* deep violet */
+body.fg2  { --bg:#160b2d; }
+body.fg3  { --bg:#120c34; }
+body.fg4  { --bg:#0f0d3b; } /* indigo */
+body.fg5  { --bg:#0c0e42; }
+body.fg6  { --bg:#090f49; }
+body.fg7  { --bg:#07104f; }
+body.fg8  { --bg:#051155; }
+body.fg9  { --bg:#04125b; } /* blue */
+body.fg10 { --bg:#031361; }
+body.fg11 { --bg:#021467; }
+body.fg12 { --bg:#01156d; } /* deepest blue */
+
+
+/* ===================================== */
+/* INDEX PAGE — PNG ICON VERSION */
+/* ===================================== */
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)){
+  max-width:none;
+  padding:0;
+  min-height:100vh;
+  background:#000;
+}
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices{
+  width:100vw;
+  height:100vh;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:100px;
+}
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice{
+  position:relative;
+  width:420px;
+  height:60px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  white-space:nowrap;
+  color:rgba(255,255,255,0);
+  font-size:32px;
+  letter-spacing:0.06em;
+
+  padding:0;
+  border:none;
+  background:transparent;
+
+  opacity:1;
+}
+
+/* PNG icon */
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+
+  width:18px;
+  height:18px;
+
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+
+  /* 如果你的 PNG 是黑色线条，打开下面一行 */
+  /* filter: invert(1); */
+
+  transition:opacity 200ms ease;
+}
+
+/* three icons */
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:nth-child(1)::before{
+  background-image:url("icons/icon-choose.png");
+}
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:nth-child(2)::before{
+  background-image:url("icons/icon-make.png");
+}
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:nth-child(3)::before{
+  background-image:url("icons/icon-open.png");
+}
+
+/* hover: icon disappears, text appears */
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:hover{
+  color:rgba(255,255,255,0.92);
+}
+
+body > main:has(> .choices):not(:has(h3)):not(:has(.story)) > .choices > .choice:hover::before{
+  opacity:0;
+}
+
+/* ====== wide screens ====== */
+@media (min-width:1400px){
+  main{ max-width:1200px; }
+  .story{ max-width:1000px; }
+}
+
+/* ===================================== */
+/* FG: choice vanish animation */
+/* ===================================== */
+.choice{
+  /* 你已经有 transition，这里不改动你的动画风格 */
+}
+
+.choice.vanish{
+  opacity: 0 !important;
+  transform: scale(0.96) !important;
+  filter: none !important;
+  pointer-events: none !important;
+}
+
+.choice.locked{
+  opacity: 0.10 !important;
+  pointer-events: none !important;
+}
+
+/* FG: a small progress chip */
+.fg-progress{
+  margin-top: 26px;
+  display:flex;
+  justify-content:center;
+}
+
+.fg-progress .chip{
+  font-size: 16px;
+  color: rgba(255,255,255,0.70);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.02);
+}
+
+/* ===================================== */
+/* BoS ONLY */
+/* ===================================== */
+
+/* 背景：绿 → 黄（按故事正确顺序 step1..12） */
+body.bos-step1  { --bg:#0b2312; }
+body.bos-step2  { --bg:#0f2712; }
+body.bos-step3  { --bg:#132b12; }
+body.bos-step4  { --bg:#173012; }
+body.bos-step5  { --bg:#1b3411; }
+body.bos-step6  { --bg:#1f3810; }
+body.bos-step7  { --bg:#243c0f; }
+body.bos-step8  { --bg:#29410e; }
+body.bos-step9  { --bg:#2f450c; }
+body.bos-step10 { --bg:#364a0a; }
+body.bos-step11 { --bg:#3d4f07; }
+body.bos-step12 { --bg:#455505; }
+
+/* start 页的云容器 */
+body[data-bos="start"] .bos-cloud{
+  position: relative;
+  width: 100%;
+  height: 520px;
+  max-width: 920px;
+  margin: 10px auto 0;
+}
+
+/* start 页入口按钮：绝对定位 + 轻浮动 */
+body[data-bos="start"] .bos-key{
+  position: absolute;
+  animation: bosFloat 3.2s ease-in-out infinite;
+  animation-delay: var(--floatDelay, 0s);
+  will-change: transform;
+  opacity: 0.16; /* 常驻低透明，符合你整体风格 */
+}
+
+body[data-bos="start"] .bos-key:hover{
+  opacity: 1;
+}
+
+/* 浮动动画 */
+@keyframes bosFloat{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(calc(-1 * var(--floatAmp, 14px))); }
+}
+
+/* 点击后其它入口消失 */
+body[data-bos="start"] .bos-key.vanish{
+  opacity: 0 !important;
+  transform: scale(0.96) !important;
+  pointer-events: none !important;
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+body[data-bos="start"] .bos-key.chosen{
+  opacity: 1 !important;
+  transform: scale(1.02) !important;
+}
+
+/* 编码 chip */
+body[data-bos="frag"] .bos-code,
+body[data-bos="puzzle"] .bos-code{
+  text-align: center;
+  font-size: 16px;
+  color: rgba(255,255,255,0.60);
+  letter-spacing: 0.14em;
+  margin: 0 0 14px 0;
+}
+
+/* puzzle 输入区 */
+body[data-bos="puzzle"] .bos-form{ margin-top: 26px; }
+
+body[data-bos="puzzle"] .bos-grid{
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+body[data-bos="puzzle"] .bos-input{
+  width: 100%;
+  padding: 12px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.02);
+  color: rgba(255,255,255,0.88);
+  font-family: inherit;
+  font-size: 18px;
+  text-align: center;
+  outline: none;
+}
+
+body[data-bos="puzzle"] .bos-feedback{
+  max-width: 920px;
+  margin: 18px auto 0;
+  text-align: center;
+}
+
+body[data-bos="puzzle"] .bos-msg{
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.72);
+}
+
+body[data-bos="puzzle"] .bos-msg.ok{ color: rgba(255,255,255,0.88); }
+body[data-bos="puzzle"] .bos-msg.bad{ color: rgba(255,255,255,0.72); }
+body[data-bos="puzzle"] .bos-msg.muted{ color: rgba(255,255,255,0.55); }
+
+body[data-bos="puzzle"] .bos-hints{
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+body[data-bos="puzzle"] .bos-hint{
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.02);
+  color: rgba(255,255,255,0.68);
+}
+
+body[data-bos="puzzle"] .bos-hint.yes{
+  border-color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.90);
+}
+
+.intro{
+  max-width: 720px;
+  margin: 0 auto 42px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.02em;
+}
+
+/* ===================== */
+/* Story corner controls (inside panel) */
+/* ===================== */
+
+.story{
+  position: relative; /* 锚点 */
+  padding-bottom: 58px; /* ⬅️ 给按钮留空间 */
+}
+
+/* 容器：贴在文本框内部底部 */
+.story-controls{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px; /* ⬅️ 在文本框内部 */
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+/* 按钮本体 */
+.story-btn{
+  pointer-events: auto;
+  font-size: 15px;              /* ⬅️ 稍微变大 */
+  color: rgba(255,255,255,0.72);
+  text-decoration: none;
+
+  padding: 8px 14px;            /* ⬅️ 体积更实 */
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.22);
+
+  background: rgba(0,0,0,0.28);
+  backdrop-filter: blur(6px);
+
+  opacity: 0.6;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+/* 左右微调，让它“贴角” */
+.story-btn.left{
+  transform: translateX(0);
+}
+
+.story-btn.right{
+  transform: translateX(0);
+}
+
+/* hover：更清楚，但不跳 */
+.story-btn:hover{
+  opacity: 0.95;
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.38);
+}
+
+/* ============================= */
+/* BoS start — simple action row */
+/* ============================= */
+
+body[data-bos="start"] .bos-action-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  margin-top: 42px;
+}
+
+/* 中间主按钮 */
+body[data-bos="start"] .bos-main{
+  opacity: 1;
+  font-size: 24px;
+  padding: 14px 22px;
+}
+
+/* 左右小按钮 */
+body[data-bos="start"] .bos-small{
+  font-size: 14px;
+  padding: 6px 10px;
+
+  opacity: 0.6;
+  text-decoration: none;
+  color: rgba(255,255,255,0.75);
+
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.02);
+
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+body[data-bos="start"] .bos-small:hover{
+  opacity: 1;
+  transform: scale(1.05);
+}
